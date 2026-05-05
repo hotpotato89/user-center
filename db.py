@@ -54,6 +54,19 @@ async def clear_all_db(pool, password: schemas.PasswordForm):
     async with pool.acquire() as session:
         deleted = await session.fetchval('select count(*) from users')
         if deleted == 0:
-            return schemas.ReturnForm(success=True, message='База данных итак пуста', error_code='empty')
+            return schemas.ReturnForm(success=True, message='База данных уже пуста', error_code='empty')
         await session.execute('truncate users restart identity')
     return schemas.ReturnForm(success=True, message=f'Удалено {deleted} записей.')
+
+async def delete_user_db(pool, user_id: schemas.UserIdForm, password: schemas.PasswordForm):
+    if password.password != admin_password:
+        return schemas.ReturnForm(success=False, message='Неверный админ-пароль', error_code='unauthorized')
+    async with pool.acquire() as session:
+        try:
+            deleted_data = await session.fetch('delete from users where id=$1 returning *', user_id.id)
+            if not deleted_data:
+                return schemas.ReturnForm(success=False, message='Нет такого пользователя', error_code='unknown_user')
+        except Exception as e:
+            print(f'Ошибка {e}')
+            return schemas.ReturnForm(success=False, message='Ошибка внутри сервера', error_code='server_error')
+    return schemas.ReturnForm(success=True, message=f'Удален пользователь под айди {user_id.id}', data=[dict(row) for row in deleted_data])

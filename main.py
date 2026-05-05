@@ -49,3 +49,14 @@ async def clear_all(password: schemas.PasswordForm, pool = Depends(get_pool)):
             raise HTTPException(status_code=401, detail=result.message)
         raise HTTPException(status_code=500, detail=result.message)
     return result
+
+@app.delete('/delete_user', tags=main_tag)
+async def delete_user(user_id: schemas.UserIdForm, password: schemas.PasswordForm, pool = Depends(get_pool)):
+    result = await db.delete_user_db(pool, user_id, password)
+    if not result.success:
+        if result.error_code == 'unauthorized':
+            raise HTTPException(status_code=401, detail=result.message)
+        if result.error_code == 'unknown_user':
+            raise HTTPException(status_code=404, detail=result.message)
+        raise HTTPException(status_code=500, detail=result.message)
+    return result
