@@ -1,99 +1,56 @@
-# ⚡️ FastAPI User Management API ⚡️
+# 🚀 FastAPI User Management API
 
-![FastAPI](https://shields.io)
-![PostgreSQL](https://shields.io)
-![Pydantic](https://shields.io)
+Простой и эффективный пет-проект на **FastAPI** для управления списком пользователей. Реализовано взаимодействие с **PostgreSQL** через асинхронный драйвер `asyncpg`, контейнеризация через **Docker** и валидация данных с помощью **Pydantic**.
 
-Асинхронный сервис для управления данными пользователей с автоматическим созданием таблиц и мониторингом производительности.
+## ✨ Особенности
+- **Асинхронность**: Полностью неблокирующий код с использованием `asyncpg`.
+- **🚀 Производительность**: Middleware для отслеживания медленных запросов (> 100мс).
+- **🛡 Валидация**: Строгая проверка email, возраста и имен через Pydantic-схемы.
+- **🐳 Docker Ready**: Готовый `docker-compose` для быстрого развертывания базы и приложения.
+- **📊 Database**: Автоматическое создание таблиц и индексов при старте (Lifespan события).
 
----
+## 🛠 Технологический стек
+- **Backend**: FastAPI, Uvicorn.
+- **Database**: PostgreSQL 15.
+- **Environment**: Python-dotenv (управление секретами).
+- **Deployment**: Docker, Docker Compose.
 
-## 💎 Основные возможности
+## 📋 Эндпоинты (API)
+- `GET /` — Проверка состояния сервера (Healthcheck).
+- `GET /users` — Получение списка всех пользователей (сортировка по времени регистрации).
+- `POST /add_user` — Регистрация нового пользователя.
+- `DELETE /delete_user` — Удаление конкретного пользователя (требуется админ-пароль).
+- `DELETE /clear` — Полная очистка базы данных (требуется админ-пароль).
 
-🔹 **Database Pooling** — эффективное управление соединениями через `asyncpg`.  
-🔹 **Performance Tracking** — встроенная Middleware для логирования медленных запросов.  
-🔹 **Smart Validation** — строгая проверка данных через Pydantic (email, возраст, пустые строки).  
-🔹 **Lifespan Management** — корректное открытие и закрытие ресурсов БД.
+## 🚀 Быстрый запуск
 
----
-
-## 🛠 Установка и запуск
-
-1️⃣ **Клонируйте репозиторий:**
-```bash
-git clone <url_вашего_репозитория>
-cd <папка_проекта>
-```
-
-2️⃣ **Настройте переменные окружения:**
-Создайте файл `.env` в корневой директории:
+### 1. Подготовка окружения
+Создайте файл `.env` в корневой папке проекта:
 ```env
-DATABASE_URL=postgresql://postgres:password@localhost:5432/your_db
-ADMIN_PASSWORD=top_secret_pass
+DB_USER=postgres
+DB_PASSWORD=mysecretpassword
+DB_NAME=user_db
+ADMIN_PASSWORD=superadmin
+DATABASE_URL=postgresql://postgres:mysecretpassword@db:5432/user_db
 ```
 
-3️⃣ **Установите зависимости:**
+### 2. Запуск через Docker
+Убедитесь, что у вас установлен Docker, и выполните команду:
 ```bash
-pip install -r requirements.txt
+docker-compose up --build
 ```
+После запуска API будет доступна по адресу: [http://localhost:8000](http://localhost:8000)
 
-4️⃣ **Запустите сервер:**
-```bash
-uvicorn main:app --reload
-```
+### 3. Документация
+FastAPI автоматически генерирует интерактивную документацию:
+- **Swagger UI**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc)
+
+## 📁 Структура проекта
+- `main.py` — Инициализация FastAPI, маршруты и Middleware.
+- `db.py` — Логика работы с базой данных, управление пулом соединений.
+- `schemas.py` — Pydantic модели для валидации входящих и исходящих данных.
+- `docker-compose.yml` & `Dockerfile` — Конфигурация контейнеризации.
 
 ---
-
-## 🔌 API Эндпоинты
-
-### 👥 Пользователи
-
-| Метод | Путь | Описание |
-| :--- | :--- | :--- |
-| `GET` | `/` | Статус сервера 🟢 |
-| `GET` | `/users` | Список всех пользователей |
-| `POST` | `/add_user` | Регистрация нового пользователя |
-| `DELETE` | `/clear` | Очистка БД (только для админа) ⚠️ |
-
----
-
-## 🏗 Структура проекта
-
-```text
-.
-├── 📄 main.py      # Инициализация FastAPI и роутинг
-├── 📄 db.py        # Логика БД и SQL запросы
-├── 📄 schemas.py   # Pydantic модели (схемы)
-├── 📄 .env         # Конфиденциальные данные
-└── 📄 requirements.txt
-```
-
----
-
-## 🛡 Схемы данных
-
-### UserDataForm (POST /add_user)
-```json
-{
-  "name": "Ivan",
-  "age": 25,
-  "email": "ivan@example.com"
-}
-```
-
-### PasswordForm (DELETE /clear)
-```json
-{
-  "password": "your_admin_password"
-}
-```
-
----
-
-## 📝 Документация
-После запуска доступна по ссылкам:
-* **Swagger UI**: [http://127.0.0](http://127.0.0)
-* **ReDoc**: [http://127.0.0](http://127.0.0)
-
----
-<p align="center">Made with ❤️ for clean code</p>
+*Разработано в качестве пет-проекта для изучения современных подходов в разработке API.*
