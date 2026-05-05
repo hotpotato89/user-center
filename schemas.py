@@ -1,5 +1,4 @@
 from typing import Optional, Any
-
 from pydantic import BaseModel, Field, EmailStr, field_validator
 
 class ReturnForm(BaseModel): #Универсальный
@@ -18,6 +17,9 @@ class PasswordForm(BaseModel):
         if not v:
             raise ValueError('Пароль не должен быть пустым')
         return v
+        
+class UserIdForm(BaseModel):
+    id: int = Field(..., ge=1, description='id пользователя')
 
 class UserDataForm(BaseModel):
     name: str = Field(..., min_length=1,  max_length=60, description='Имя пользователя')
