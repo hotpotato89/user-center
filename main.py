@@ -21,7 +21,7 @@ async def middleware_(request: Request, next_call):
 
 @app.get('/', tags=main_tag)
 async def main_page():
-    return schemas.ReturnForm(success=True, message='Успешно')
+    return schemas.ReturnForm(success=True, message='Healthy')
 
 @app.get('/users', tags=main_tag)
 async def get_users(pool = Depends(get_pool)):
@@ -47,7 +47,5 @@ async def clear_all(password: schemas.PasswordForm, pool = Depends(get_pool)):
     if not result.success:
         if result.error_code == 'unauthorized':
             raise HTTPException(status_code=401, detail=result.message)
-        if result.error_code == 'empty':
-            raise HTTPException(status_code=400, detail=result.message)
         raise HTTPException(status_code=500, detail=result.message)
     return result

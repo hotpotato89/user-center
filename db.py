@@ -53,6 +53,6 @@ async def clear_all_db(pool, password: schemas.PasswordForm):
     async with pool.acquire() as session:
         deleted = await session.fetchval('select count(*) from users')
         if deleted == 0:
-            return schemas.ReturnForm(success=False, message='База данных итак пуста', error_code='empty')
+            return schemas.ReturnForm(success=True, message='База данных итак пуста', error_code='empty')
         await session.execute('truncate users restart identity')
     return schemas.ReturnForm(success=True, message=f'Удалено {deleted} записей.')
