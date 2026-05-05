@@ -25,6 +25,7 @@ async def lifespan(app: FastAPI):
     print('Соединение с базой данных установлено')
     async with app.state.pool.acquire() as session:
         await session.execute('create table if not exists users (id serial primary key, name varchar(60), age integer, email varchar(45) unique, reg_time timestamp default now())')
+        await session.execute('create index if not exists idx_regtime_desc on users(reg_time desc)')
     yield
     print('Соединение с базой данных разорвано')
     await app.state.pool.close()
