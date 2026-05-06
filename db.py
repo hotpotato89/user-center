@@ -32,7 +32,7 @@ async def lifespan(app: FastAPI):
 
 async def get_users_db(pool):
     async with pool.acquire() as session:
-        data = await session.fetch('select * from users order by reg_time desc')
+        data = await session.fetch('select * from users order by reg_time desc limit 50')
     if not data:
         return schemas.ReturnForm(success=False, message='База данных пуста', error_code='empty')
     return schemas.ReturnForm(success=True, message=f'Найдено {len(data)} пользователей.', data=[dict(row) for row in data])
