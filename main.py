@@ -69,8 +69,8 @@ async def clear_all(password: schemas.PasswordForm, pool = Depends(get_pool)):
     return result
 
 @app.delete('/delete_user', tags=main_tag)
-async def delete_user(user_id: schemas.UserIdForm, password: schemas.PasswordForm, pool = Depends(get_pool)):
-    result = await db.delete_user_db(pool, user_id, password)
+async def delete_user(user_data: schemas.DeleteUserForm, pool = Depends(get_pool)):
+    result = await db.delete_user_db(pool, user_data)
     if not result.success:
         if result.error_code == 'unauthorized':
             raise HTTPException(status_code=401, detail=result.message)
