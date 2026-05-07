@@ -37,9 +37,10 @@ async def get_users_db(pool, limit: int, skip: int):
         data = await session.fetch('select * from users order by reg_time desc offset $1 limit $2', skip, limit)
         total = await session.fetchval('select count(*) from users')
     current_page = (skip // limit) + 1 if limit>0 else 1
+    total_pages = (total + limit - 1) // limit if limit > 0 else 1
     if not data:
         return schemas.ReturnForm(success=False, message='База данных пуста', error_code='empty')
-    return schemas.ReturnForm(success=True, message=f'Найдено {len(data)} пользователей.', data=[dict(row) for row in data])
+    return schemas.ReturnForm(success=True, message=f'Найдено {len(data)} пользователей.', data=[dict(row) for row in data], total=total, page=current_page, total_pages=total_pages, limit=limit)
 
 async def add_user_db(pool, user_data: schemas.UserDataForm):
     async with pool.acquire() as session:
