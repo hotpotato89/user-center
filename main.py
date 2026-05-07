@@ -1,6 +1,11 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, Query
 from time import perf_counter
 
+#Для фронта
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from pathlib import Path
+
 import db
 import schemas
 from log import get_logger
@@ -8,6 +13,13 @@ from log import get_logger
 app = FastAPI(lifespan=db.lifespan, title='Моя API')
 logger = get_logger(__name__)
 main_tag: list = ['Моя API']
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/", response_class=HTMLResponse)
+async def main_page():
+    with open("static/index.html", "r", encoding="utf-8") as f:
+        return f.read()
 
 async def get_pool():
     return app.state.pool
@@ -21,8 +33,8 @@ async def middleware_(request: Request, next_call):
         logger.warning(f'Долгое выполнение запроса: {duration:.4f}')
     return result
 
-@app.get('/', tags=main_tag)
-async def main_page():
+@app.get('/health', tags=main_tag)
+async def healthcheck():
     return schemas.ReturnForm(success=True, message='Healthy')
 
 @app.get('/users', tags=main_tag)
