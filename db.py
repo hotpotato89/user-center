@@ -67,19 +67,19 @@ async def clear_all_db(pool, password: schemas.PasswordForm):
     logger.info(f'База данных очищена, удалено {deleted} записей.')
     return schemas.ReturnForm(success=True, message=f'Удалено {deleted} записей.')
 
-async def delete_user_db(pool, user_id: schemas.UserIdForm, password: schemas.PasswordForm):
-    logger.info(f'Попытка удалить пользователя по айди {user_id.id}')
-    if password.password != admin_password:
+async def delete_user_db(pool, user_data: schemas.DeleteUserForm):
+    logger.info(f'Попытка удалить пользователя по айди {user_data.id}')
+    if user_data.password != admin_password:
         logger.error('Был введен неверный пароль')
         return schemas.ReturnForm(success=False, message='Неверный админ-пароль', error_code='unauthorized')
     async with pool.acquire() as session:
         try:
-            deleted_data = await session.fetch('delete from users where id=$1 returning *', user_id.id)
+            deleted_data = await session.fetch('delete from users where id=$1 returning *', user_data.id)
             if not deleted_data:
-                logger.error(f'Пользователя по айди {user_id.id} не существует')
+                logger.error(f'Пользователя по айди {user_data.id} не существует')
                 return schemas.ReturnForm(success=False, message='Нет такого пользователя', error_code='unknown_user')
         except Exception as e:
             logger.error(f'Ошибка {e}')
             return schemas.ReturnForm(success=False, message='Ошибка внутри сервера', error_code='server_error')
-    logger.info(f'Пользователь по айди {user_id.id} удален')
-    return schemas.ReturnForm(success=True, message=f'Удален пользователь под айди {user_id.id}', data=[dict(row) for row in deleted_data])
+    logger.info(f'Пользователь по айди {user_data.id} удален')
+    return schemas.ReturnForm(success=True, message=f'Удален пользователь под айди {user_data.id}', data=[dict(row) for row in deleted_data])

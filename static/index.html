@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Center - Управление пользователями</title>
+    <title>User Center</title>
     <style>
         * {
             margin: 0;
@@ -12,177 +12,137 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
             padding: 20px;
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* Glassmorphism карточки */
-        .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
+        .card {
+            background: white;
+            border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         h1 {
-            color: white;
             margin-bottom: 10px;
-            font-size: 2.5em;
+            color: #333;
         }
 
-        .subtitle {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 30px;
+        h2 {
+            margin-bottom: 15px;
+            color: #555;
+            font-size: 20px;
         }
 
-        /* Формы */
         .form-group {
             margin-bottom: 15px;
         }
 
         label {
             display: block;
-            color: white;
             margin-bottom: 5px;
             font-weight: 500;
+            color: #555;
         }
 
-        input, select {
+        input {
             width: 100%;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.9);
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            background: white;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
         }
 
         button {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #007bff;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 14px;
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            background: #0056b3;
         }
 
         button.danger {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
+            background: #dc3545;
         }
 
-        button.success {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-        }
-
-        /* Таблица */
-        .table-wrapper {
-            overflow-x: auto;
+        button.danger:hover {
+            background: #c82333;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            color: white;
         }
 
         th, td {
-            padding: 12px;
+            padding: 10px;
             text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid #eee;
         }
 
         th {
-            background: rgba(255, 255, 255, 0.2);
+            background: #f8f9fa;
             font-weight: 600;
         }
 
-        tr:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Пагинация */
         .pagination {
             display: flex;
-            justify-content: center;
-            gap: 10px;
+            gap: 5px;
             margin-top: 20px;
-            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .page-btn {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 16px;
-            border-radius: 8px;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .page-btn:hover {
-            background: rgba(255, 255, 255, 0.4);
         }
 
         .page-btn.active {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
         }
 
-        /* Алерты */
         .alert {
-            padding: 12px 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
             position: fixed;
             top: 20px;
             right: 20px;
+            padding: 12px 20px;
+            border-radius: 6px;
+            color: white;
             z-index: 1000;
-            animation: slideIn 0.3s ease;
         }
 
         .alert-success {
-            background: #4caf50;
-            color: white;
+            background: #28a745;
         }
 
         .alert-error {
-            background: #f44336;
-            color: white;
+            background: #dc3545;
         }
 
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .stats {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 14px;
         }
 
-        /* Секции */
         .two-columns {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -193,96 +153,69 @@
             .two-columns {
                 grid-template-columns: 1fr;
             }
-            .pagination {
-                gap: 5px;
-            }
-            .page-btn {
-                padding: 5px 10px;
-                font-size: 12px;
-            }
         }
 
-        .stats {
-            color: white;
-            margin-top: 10px;
-            font-size: 14px;
-            opacity: 0.8;
-        }
-
-        .delete-icon {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
+        .delete-btn {
+            background: #dc3545;
             padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
             font-size: 12px;
         }
 
-        .delete-icon:hover {
-            background: #f44336;
+        .delete-btn:hover {
+            background: #c82333;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="glass">
+        <div class="card">
             <h1>👥 User Center</h1>
-            <p class="subtitle">Управление пользователями | FastAPI + PostgreSQL</p>
+            <p>Управление пользователями | FastAPI + PostgreSQL</p>
         </div>
 
         <div class="two-columns">
-            <!-- Левая колонка: Добавление пользователя -->
-            <div class="glass">
+            <div class="card">
                 <h2>➕ Добавить пользователя</h2>
-                <form id="addUserForm">
+                <form id="addForm">
                     <div class="form-group">
                         <label>Имя</label>
-                        <input type="text" id="userName" required minlength="1" maxlength="60">
+                        <input type="text" id="name" required>
                     </div>
                     <div class="form-group">
                         <label>Возраст</label>
-                        <input type="number" id="userAge" required min="1" max="120">
+                        <input type="number" id="age" required>
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" id="userEmail" required maxlength="45">
+                        <input type="email" id="email" required>
                     </div>
-                    <button type="submit" class="success">➕ Добавить</button>
+                    <button type="submit">Добавить</button>
                 </form>
             </div>
 
-            <!-- Правая колонка: Админ-действия -->
-            <div class="glass">
-                <h2>🔐 Админ-панель</h2>
+            <div class="card">
+                <h2>🔐 Админ</h2>
                 <div class="form-group">
-                    <label>Админ-пароль</label>
-                    <input type="password" id="adminPassword" placeholder="Введите пароль">
+                    <label>Пароль</label>
+                    <input type="password" id="adminPassword" placeholder="Админ-пароль">
                 </div>
-                <button onclick="clearAllUsers()" class="danger">🗑️ Очистить всех пользователей</button>
+                <button onclick="clearAll()" class="danger">Очистить всех</button>
             </div>
         </div>
 
-        <!-- Список пользователей -->
-        <div class="glass">
-            <h2>📋 Список пользователей</h2>
+        <div class="card">
+            <h2>📋 Пользователи</h2>
             <div class="stats" id="stats"></div>
-            <div class="table-wrapper">
-                <table id="usersTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Имя</th>
-                            <th>Возраст</th>
-                            <th>Email</th>
-                            <th>Дата регистрации</th>
-                            <th>Действия</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersBody">
-                        <tr><td colspan="6">Загрузка...</td></tr>
-                    </tbody>
-                </table>
+            <div style="margin-bottom: 10px;">
+                <label>Показывать: </label>
+                <select id="limitSelect" onchange="changeLimit()">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
             </div>
+            <div id="usersList"></div>
             <div class="pagination" id="pagination"></div>
         </div>
     </div>
@@ -293,108 +226,97 @@
 
         async function loadUsers() {
             try {
-                const response = await fetch(`/users?limit=${currentLimit}&page=${currentPage}`);
-                const data = await response.json();
+                const res = await fetch(`/users?limit=${currentLimit}&page=${currentPage}`);
+                const data = await res.json();
                 
                 if (data.success) {
                     renderUsers(data.data);
                     renderPagination(data);
-                    document.getElementById('stats').innerHTML = `📊 Всего: ${data.total} пользователей | Страница ${data.page} из ${data.total_pages} | Показано ${data.data.length}`;
+                    document.getElementById('stats').innerHTML = `📊 Всего: ${data.total} | Страница ${data.page} из ${data.total_pages}`;
                 } else {
-                    showAlert(data.message, 'error');
+                    document.getElementById('usersList').innerHTML = '<p>Нет пользователей</p>';
                 }
-            } catch (error) {
-                showAlert('Ошибка загрузки пользователей', 'error');
+            } catch (e) {
+                document.getElementById('usersList').innerHTML = '<p>Ошибка загрузки</p>';
             }
         }
 
         function renderUsers(users) {
-            const tbody = document.getElementById('usersBody');
             if (!users || users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6">Нет пользователей</td></tr>';
+                document.getElementById('usersList').innerHTML = '<p>Нет пользователей</p>';
                 return;
             }
 
-            tbody.innerHTML = users.map(user => `
-                <tr>
-                    <td>${user.id}</td>
-                    <td>${escapeHtml(user.name)}</td>
-                    <td>${user.age}</td>
-                    <td>${escapeHtml(user.email)}</td>
-                    <td>${new Date(user.reg_time).toLocaleString()}</td>
-                    <td><button class="delete-icon" onclick="deleteUser(${user.id})">🗑️</button></td>
-                </tr>
-            `).join('');
+            let html = `
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Имя</th><th>Возраст</th><th>Email</th><th>Действия</th></tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            users.forEach(user => {
+                html += `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${escapeHtml(user.name)}</td>
+                        <td>${user.age}</td>
+                        <td>${escapeHtml(user.email)}</td>
+                        <td><button class="delete-btn" onclick="deleteUser(${user.id})">Удалить</button></td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table>`;
+            document.getElementById('usersList').innerHTML = html;
         }
 
         function renderPagination(data) {
-            const pagination = document.getElementById('pagination');
             if (data.total_pages <= 1) {
-                pagination.innerHTML = '';
+                document.getElementById('pagination').innerHTML = '';
                 return;
             }
 
-            let pages = [];
-            const maxVisible = 5;
-            let start = Math.max(1, data.page - Math.floor(maxVisible / 2));
-            let end = Math.min(data.total_pages, start + maxVisible - 1);
-            
-            if (end - start < maxVisible - 1) {
-                start = Math.max(1, end - maxVisible + 1);
+            let html = '';
+            for (let i = 1; i <= Math.min(data.total_pages, 10); i++) {
+                html += `<div class="page-btn ${i === data.page ? 'active' : ''}" onclick="goToPage(${i})">${i}</div>`;
             }
-
-            if (start > 1) {
-                pages.push({ page: 1, label: '«' });
-                if (start > 2) pages.push({ page: null, label: '...' });
-            }
-
-            for (let i = start; i <= end; i++) {
-                pages.push({ page: i, label: i.toString() });
-            }
-
-            if (end < data.total_pages) {
-                if (end < data.total_pages - 1) pages.push({ page: null, label: '...' });
-                pages.push({ page: data.total_pages, label: '»' });
-            }
-
-            pagination.innerHTML = pages.map(p => 
-                `<div class="page-btn ${p.page === data.page ? 'active' : ''}" 
-                      onclick="goToPage(${p.page})">
-                    ${p.label}
-                </div>`
-            ).join('');
+            document.getElementById('pagination').innerHTML = html;
         }
 
         function goToPage(page) {
-            if (page && page !== currentPage) {
-                currentPage = page;
-                loadUsers();
-            }
+            currentPage = page;
+            loadUsers();
+        }
+
+        function changeLimit() {
+            currentLimit = parseInt(document.getElementById('limitSelect').value);
+            currentPage = 1;
+            loadUsers();
         }
 
         async function addUser(event) {
             event.preventDefault();
-            
-            const name = document.getElementById('userName').value;
-            const age = parseInt(document.getElementById('userAge').value);
-            const email = document.getElementById('userEmail').value;
+            const name = document.getElementById('name').value;
+            const age = parseInt(document.getElementById('age').value);
+            const email = document.getElementById('email').value;
 
             try {
-                const response = await fetch('/add_user', {
+                const res = await fetch('/add_user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, age, email })
                 });
                 
-                const data = await response.json();
-                if (response.ok) {
-                    showAlert('✅ Пользователь добавлен!', 'success');
-                    document.getElementById('addUserForm').reset();
+                if (res.ok) {
+                    showAlert('✅ Добавлено!', 'success');
+                    document.getElementById('addForm').reset();
                     loadUsers();
                 } else {
-                    showAlert(data.detail || data.message || 'Ошибка добавления', 'error');
+                    const data = await res.json();
+                    showAlert(data.detail || 'Ошибка', 'error');
                 }
-            } catch (error) {
+            } catch (e) {
                 showAlert('Ошибка сети', 'error');
             }
         }
@@ -402,61 +324,65 @@
         async function deleteUser(id) {
             const password = document.getElementById('adminPassword').value;
             if (!password) {
-                showAlert('Введите админ-пароль', 'error');
+                showAlert('Введите пароль', 'error');
                 return;
             }
 
-            if (!confirm(`Удалить пользователя ID ${id}?`)) return;
+            if (!confirm(`Удалить пользователя ${id}?`)) return;
 
             try {
-                const response = await fetch(`/delete_user?user_id=${id}&password=${password}`, {
-                    method: 'DELETE'
+                const res = await fetch('/delete_user', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id, password: password })
                 });
                 
-                if (response.ok) {
-                    showAlert('✅ Пользователь удалён!', 'success');
+                if (res.ok) {
+                    showAlert('✅ Удалено!', 'success');
                     loadUsers();
                 } else {
-                    const data = await response.json();
-                    showAlert(data.detail || 'Ошибка удаления', 'error');
+                    const data = await res.json();
+                    showAlert(data.detail || 'Ошибка', 'error');
                 }
-            } catch (error) {
+            } catch (e) {
                 showAlert('Ошибка сети', 'error');
             }
         }
 
-        async function clearAllUsers() {
+        async function clearAll() {
             const password = document.getElementById('adminPassword').value;
             if (!password) {
-                showAlert('Введите админ-пароль', 'error');
+                showAlert('Введите пароль', 'error');
                 return;
             }
 
-            if (!confirm('⚠️ Очистить всех пользователей? Это действие необратимо!')) return;
+            if (!confirm('Очистить всех пользователей?')) return;
 
             try {
-                const response = await fetch(`/clear?password=${password}`, {
-                    method: 'DELETE'
+                const res = await fetch('/clear', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: password })
                 });
                 
-                if (response.ok) {
-                    showAlert('✅ База данных очищена!', 'success');
+                if (res.ok) {
+                    showAlert('✅ Очищено!', 'success');
                     loadUsers();
                 } else {
-                    const data = await response.json();
-                    showAlert(data.detail || 'Ошибка очистки', 'error');
+                    const data = await res.json();
+                    showAlert(data.detail || 'Ошибка', 'error');
                 }
-            } catch (error) {
+            } catch (e) {
                 showAlert('Ошибка сети', 'error');
             }
         }
 
-        function showAlert(message, type) {
+        function showAlert(msg, type) {
             const alert = document.createElement('div');
             alert.className = `alert alert-${type}`;
-            alert.innerHTML = message;
+            alert.textContent = msg;
             document.body.appendChild(alert);
-            setTimeout(() => alert.remove(), 3000);
+            setTimeout(() => alert.remove(), 2000);
         }
 
         function escapeHtml(text) {
@@ -465,24 +391,7 @@
             return div.innerHTML;
         }
 
-        document.getElementById('addUserForm').addEventListener('submit', addUser);
-
-        // Выбор лимита
-        const limitSelect = document.createElement('select');
-        limitSelect.style.cssText = 'margin-left: 10px; padding: 5px; border-radius: 5px;';
-        limitSelect.innerHTML = `
-            <option value="5">5</option>
-            <option value="10" selected>10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-        `;
-        limitSelect.onchange = () => {
-            currentLimit = parseInt(limitSelect.value);
-            currentPage = 1;
-            loadUsers();
-        };
-        document.querySelector('.stats').appendChild(limitSelect);
-
+        document.getElementById('addForm').addEventListener('submit', addUser);
         loadUsers();
     </script>
 </body>

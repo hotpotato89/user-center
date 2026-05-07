@@ -34,3 +34,15 @@ class UserDataForm(BaseModel):
     @classmethod
     def email_lower(cls, v: str) -> str:
         return v.lower()
+    
+class DeleteUserForm(BaseModel):
+    id: int = Field(..., ge=1, description='id пользователя')
+    password: str = Field(..., min_length=1, max_length=123, description='Админ-пароль')
+
+    @field_validator('password')
+    @classmethod
+    def password_strip(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError('Пароль не должен быть пустым')
+        return v
