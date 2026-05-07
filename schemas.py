@@ -6,6 +6,10 @@ class ReturnForm(BaseModel): #Универсальный
     message: str
     error_code: Optional[str] = None
     data: Optional[Any] = None
+    total: Optional[int] = None
+    page: Optional[int] = None
+    total_pages: Optional[int] = None
+    limit: Optional[int] = None
 
 class PasswordForm(BaseModel):
     password: str = Field(..., min_length=1, max_length=128, description='Пароль для выполнения команды')

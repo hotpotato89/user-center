@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Depends, HTTPException
+from fastapi import FastAPI, Request, Depends, HTTPException, Query
 from time import perf_counter
 
 import db
@@ -26,8 +26,12 @@ async def main_page():
     return schemas.ReturnForm(success=True, message='Healthy')
 
 @app.get('/users', tags=main_tag)
-async def get_users(pool = Depends(get_pool)):
-    result = await db.get_users_db(pool)
+async def get_users(pool = Depends(get_pool),
+                    limit: int = Query(..., ge=1, description='Лимит записей в одной странице'),
+                    page: int = Query(..., ge=1, description='Какая страница будет просмотрена')):
+    limit = min(limit, 50)
+    skip = (page-1)*limit
+    result = await db.get_users_db(pool=pool, limit=limit, skip=skip)
     if result.success != True:
         if result.error_code == 'empty':
             raise HTTPException(status_code=404, detail=result.message)
