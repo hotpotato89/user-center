@@ -3,8 +3,10 @@ from time import perf_counter
 
 import db
 import schemas
+from log import get_logger
 
 app = FastAPI(lifespan=db.lifespan, title='Моя API')
+logger = get_logger(__name__)
 main_tag: list = ['Моя API']
 
 async def get_pool():
@@ -16,7 +18,7 @@ async def middleware_(request: Request, next_call):
     result = await next_call(request)
     duration = perf_counter() - start_time
     if duration > 0.1:
-        print(f'Медленный запрос, заняло {duration:.4f}')
+        logger.warning(f'Долгое выполнение запроса: {duration:.4f}')
     return result
 
 @app.get('/', tags=main_tag)
