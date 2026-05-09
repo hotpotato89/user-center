@@ -1,13 +1,10 @@
 import asyncpg
 import os
-from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 import schemas
 from log import get_logger
-
-load_dotenv()
 
 dsn = os.getenv('DATABASE_URL')
 if not dsn:
