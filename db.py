@@ -25,6 +25,8 @@ async def lifespan(app: FastAPI):
     async with app.state.pool.acquire() as session:
         await session.execute('create table if not exists users (id serial primary key, name varchar(60), age integer, email varchar(45) unique, reg_time timestamp default now())')
         await session.execute('create index if not exists idx_regtime_desc on users(reg_time desc)')
+        await session.execute('create index if not exists idx_age_max on users(age desc)')
+        await session.execute('create index if not exists idx_age_min on users(age asc)')
     yield
     logger.info('Пул соединений разорван')
     await app.state.pool.close()
@@ -80,3 +82,19 @@ async def delete_user_db(pool, user_data: schemas.DeleteUserForm):
             return schemas.ReturnForm(success=False, message='Ошибка внутри сервера', error_code='server_error')
     logger.info(f'Пользователь по айди {user_data.id} удален')
     return schemas.ReturnForm(success=True, message=f'Удален пользователь под айди {user_data.id}', data=[dict(row) for row in deleted_data])
+
+async def get_stats_db(pool):
+    async with pool.acquire() as session:
+        total_users = await session.fetchval('select count(*) from users')
+        if total_users == 0:
+            return schemas.ReturnForm(success=False, message='База данных пуста', error_code='empty')
+        oldest_user = await session.fetchrow('select * from users order by age desc limit 1')
+        youngest_user = await session.fetchrow('select * from users order by age asc limit 1')
+        mean_age = await session.fetchval('select avg(age) from users')
+        stats = {
+            'oldest_user': dict(oldest_user) if oldest_user else None,
+            'youngest_user': dict(youngest_user) if youngest_user else None,
+            'mean_age': round(mean_age, 2) if mean_age else 0,
+            'total_users': total_users
+        }
+        return schemas.ReturnForm(success=True, message='Данные успешно получены', data=stats)
