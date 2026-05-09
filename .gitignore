@@ -24,6 +24,7 @@ ENV/
 # Переменные окружения (секреты)
 .env
 !.env.example
+.env.docker
 
 # Логи
 *.log
