@@ -27,7 +27,6 @@
 ## 🛠 Технологический стек
 - **Backend**: FastAPI, Uvicorn
 - **Database**: PostgreSQL 15
-- **Environment**: Python-dotenv (секреты)
 - **Infrastructure**: Docker, Docker Compose, Neon.tech (Cloud DB)
 
 ---
