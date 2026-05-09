@@ -28,7 +28,7 @@ async def middleware_(request: Request, next_call):
     start_time = perf_counter()
     result = await next_call(request)
     duration = perf_counter() - start_time
-    if duration > 0.1:
+    if duration > 0.7:
         logger.warning(f'Долгое выполнение запроса: {duration:.4f}')
     return result
 
