@@ -3,7 +3,7 @@ from time import perf_counter
 
 #Для фронта
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from pathlib import Path
 
 import db
@@ -18,8 +18,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def main_page():
-    with open("static/index.html", "r", encoding="utf-8") as f:
-        return f.read()
+    return FileResponse('static/index.html')
 
 async def get_pool():
     return app.state.pool
